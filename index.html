@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="favi.png">
+<meta charset="UTF-8">
+<title>eDraw</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; padding: 16px; gap: 12px; }
+  h1 { font-size: 26px; font-weight: 700; color: #222; letter-spacing: -0.5px; margin-top: 8px; }
+  canvas { display: block; background: #fff; border-radius: 10px; border: 1.5px solid #ccc; cursor: crosshair; }
+  .toolbar { background: #fff; border: 1.5px solid #ddd; border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%; max-width: 880px; }
+  .sep { width: 1px; height: 26px; background: #ddd; }
+  .tool-btn { width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid #ddd; background: #fff; cursor: pointer; font-size: 16px; transition: background 0.15s, transform 0.1s; }
+  .tool-btn:hover { background: #f3f3f3; }
+  .tool-btn.active { background: #e8e8e8; border-color: #aaa; }
+  .tool-btn:active { transform: scale(0.95); }
+  .action-btn { padding: 7px 16px; border-radius: 8px; border: 1.5px solid #ddd; background: #fff; cursor: pointer; font-size: 13px; transition: background 0.15s, transform 0.1s; }
+  .action-btn:hover { background: #f3f3f3; }
+  .action-btn:active { transform: scale(0.97); }
+  .danger { color: #dc2626; border-color: #fca5a5; }
+  .danger:hover { background: #fff1f1; }
+  .size-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #555; }
+  .size-wrap input[type=range] { width: 90px; cursor: pointer; }
+  #size-val { font-weight: 700; min-width: 20px; color: #222; }
+  .palette-wrap { background: #fff; border: 1.5px solid #ddd; border-radius: 12px; padding: 10px 16px; width: 100%; max-width: 880px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .palette-label { font-size: 12px; color: #888; white-space: nowrap; }
+  .swatch-row { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+  .swatch { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.1s; flex-shrink: 0; }
+  .swatch:hover { transform: scale(1.2); }
+  .swatch.selected { border-color: #333; transform: scale(1.25); outline: 2px solid #fff; outline-offset: -3px; }
+  #cur-color-swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; flex-shrink: 0; background: #000; }
+  #custom-color { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ccc; cursor: pointer; padding: 0; }
+  #status-bar { font-size: 12px; color: #888; align-self: flex-start; padding-left: 4px; }
+</style>
+</head>
+<body>
+
+<h1>eDraw</h1>
+
+<div class="toolbar">
+  <div style="display:flex;gap:6px;">
+    <button class="tool-btn active" id="btn-pen" title="Pen">🖊</button>
+    <button class="tool-btn" id="btn-eraser" title="Eraser">🧹</button>
+    <button class="tool-btn" id="btn-line" title="Line">╲</button>
+    <button class="tool-btn" id="btn-rect" title="Rectangle">▭</button>
+    <button class="tool-btn" id="btn-circle" title="Circle">◯</button>
+    <button class="tool-btn" id="btn-fill" title="Fill">🪣</button>
+  </div>
+  <div class="sep"></div>
+  <div class="size-wrap">
+    <span>Size</span>
+    <input type="range" id="pen-size" min="1" max="50" value="5" step="1">
+    <span id="size-val">5</span>
+  </div>
+  <div class="sep"></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <label style="font-size:13px;color:#555;">Opacity</label>
+    <input type="range" id="opacity-slider" min="0.05" max="1" step="0.05" value="1" style="width:70px;cursor:pointer;">
+    <span id="opacity-val" style="font-size:13px;font-weight:700;color:#222;min-width:30px;">100%</span>
+  </div>
+  <div class="sep"></div>
+  <div style="display:flex;gap:8px;">
+    <button class="action-btn" id="btn-undo">Undo</button>
+    <button class="action-btn danger" id="btn-clear">Clear</button>
+    <button class="action-btn" id="btn-download">Download</button>
+  </div>
+</div>
+
+<div class="palette-wrap">
+  <div id="cur-color-swatch"></div>
+  <span class="palette-label">Color</span>
+  <div class="swatch-row" id="swatches"></div>
+  <input type="color" id="custom-color" title="Custom color" value="#000000">
+</div>
+
+<canvas id="drawing-board" width="880" height="500"></canvas>
+<div id="status-bar">Tool: Pen &nbsp;|&nbsp; Size: 5 &nbsp;|&nbsp; Color: #000000</div>
+
+<script src="drawing-board.js"></script>
+</body>
+</html>
